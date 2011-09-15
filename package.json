@@ -1,0 +1,15 @@
+{ "name" : "banzai-statestore-mem"
+, "description" : "Plugin module for Banzai state store. Mainly used for testing."
+, "tags" : ["ETL", "pipeline", "document", "state machine"]
+, "version" : "1.0.0"
+, "author" : "Pedro Teixeira <pedro.teixeira@gmail.com>"
+, "repository" :
+  { "type" : "git"
+  , "url" : "http://github.com/pgte/banzai-statestore-mem.git"
+  }
+, "bugs" :
+  { "web" : "http://github.com/pgte/banzai-statestore-mem/issues" }
+, "engines" : ["node >= 0.4.10"]
+, "main" : "./index"
+, "scripts": { "test": "expresso test.js" }
+}
