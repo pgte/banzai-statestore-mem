@@ -21,9 +21,14 @@ module.exports = function() {
     store[id] = doc;
     done(null, clone(doc));
   }
+  
+  function dump() {
+    console.log(store);
+  }
 
   return {
       load: load
     , save: save
+    , dump: dump
   }
 };
