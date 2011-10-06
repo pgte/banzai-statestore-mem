@@ -7,10 +7,14 @@ module.exports = function() {
   var store = {};
   
   function load(docId, done) {
-    done(null, store[docId]);
+    var revisions = store[docId] || [];
+    done(null, revisions[revisions.length - 1]);
   }
   
   function save(doc, done) {
+    var originalDoc = doc
+      , revisions;
+
     doc = clone(doc);
     var id = doc.id || doc._id;
     if (! id) {
@@ -18,17 +22,29 @@ module.exports = function() {
       nextId += 1;
       doc.id = id;
     }
-    store[id] = doc;
-    done(null, clone(doc));
+    if (! store[id]) { store[id] = []; }
+    revisions = store[id];
+    revisions.push(doc);
+    doc = clone(doc);
+    doc._rev = revisions.length;
+    done(null, doc);
+  }
+  
+  function backToRevision(docId, revision, done) {
+    if (typeof(docId) === 'object') { docId = docId.id || docId._id; }
+    var revisions = store[docId] || [];
+    revisions.splice(revision - 1, revisions.length - revision);
+    done();
   }
   
   function dump() {
     console.log(store);
   }
-
+  
   return {
       load: load
     , save: save
+    , backToRevision: backToRevision
     , dump: dump
   }
 };
