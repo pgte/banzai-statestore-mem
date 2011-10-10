@@ -22,7 +22,7 @@ module.exports.test_1 = function(beforeExit) {
       assert.isNotNull(doc.id);
       assert.eql(doc.id, doc_id);
       delete doc.id;
-      assert.eql(doc, {a:1, b:2});
+      assert.eql(doc, {a:1, b:2, _rev:1});
     });
     
   });
@@ -54,7 +54,7 @@ module.exports.test_2 = function(beforeExit) {
       assert.isNotNull(doc.id);
       assert.eql(doc.id, doc_id);
       delete doc.id;
-      assert.eql(doc, {c:1, d:2});
+      assert.eql(doc, {c:1, d:2, _rev:1});
     });
     
   });
@@ -72,7 +72,8 @@ module.exports.test_revisions = function(beforeExit) {
     doc.z = 10;
     store.save(doc, function(err, doc) {
       cb1 = true;
-      assert.eql({c:1,d:2,z:10, id:1, _rev:2}, doc);
+      delete doc.id;
+      assert.eql({c:1,d:2, _rev:2, z:10}, doc);
     });
   });
 
@@ -86,13 +87,14 @@ module.exports.test_back_to_revision = function(beforeExit) {
     , cb2 = false;
 
   store.save({c:1, d:2}, function(err, doc) {
-    doc
+    doc.d = 3;
     store.save(doc, function(err, doc) {
       store.backToRevision(doc, 1, function(err) {
         cb1 = true;
         store.load(doc.id || doc._id, function(err, doc) {
           cb2 = true;
-          assert.eql({c:1,d:2,id:1, _rev:1}, doc);
+          delete doc.id;
+          assert.eql({c:1,d:2,_rev:1}, doc);
         });
       });
     });

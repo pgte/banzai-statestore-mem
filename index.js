@@ -25,15 +25,17 @@ module.exports = function() {
     if (! store[id]) { store[id] = []; }
     revisions = store[id];
     revisions.push(doc);
-    doc = clone(doc);
     doc._rev = revisions.length;
+    doc = clone(doc);
     done(null, doc);
   }
   
   function backToRevision(docId, revision, done) {
     if (typeof(docId) === 'object') { docId = docId.id || docId._id; }
     var revisions = store[docId] || [];
-    revisions.splice(revision - 1, revisions.length - revision);
+    do {
+      revisions.splice(revisions.length - 1, 1);
+    } while(revisions.length > revision);
     done();
   }
   
