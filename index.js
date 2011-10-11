@@ -33,9 +33,9 @@ module.exports = function() {
   function backToRevision(docId, revision, done) {
     if (typeof(docId) === 'object') { docId = docId.id || docId._id; }
     var revisions = store[docId] || [];
-    do {
+    while(revisions.length > revision) {
       revisions.splice(revisions.length - 1, 1);
-    } while(revisions.length > revision);
+    }
     done();
   }
   
